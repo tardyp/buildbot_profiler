@@ -11,10 +11,22 @@ This plugin implements a profiler for buildbot master.
 - Detailed caller/callee are displayed when clicking on a function
 
 
-Usage:
+Usage
+=====
+
+installation:
+
+.. code:: bash
 
     pip install buildbot_profiler
 
 then in master.cfg:
 
-c['www']['plugins']['profiler'] = True
+.. code:: python
+
+    c['www']['plugins']['profiler'] = True
+
+Screenshot
+==========
+
+.. image:: https://raw.githubusercontent.com/tardyp/buildbot_profiler/master/screenshot.png
