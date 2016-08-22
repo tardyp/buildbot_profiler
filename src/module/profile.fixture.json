@@ -1,0 +1,264 @@
+{
+   "frames" : [
+      [
+         "net/selectreactor.py",
+         103,
+         "doSelect"
+      ],
+      [
+         "ted/internet/base.py",
+         1206,
+         "mainLoop"
+      ],
+      [
+         "ted/internet/base.py",
+         1194,
+         "run"
+      ],
+      [
+         "d/application/app.py",
+         311,
+         "runReactorWithLogging"
+      ],
+      [
+         "d/application/app.py",
+         390,
+         "startReactor"
+      ],
+      [
+         "ipts/_twistd_unix.py",
+         222,
+         "postApplication"
+      ],
+      [
+         "d/application/app.py",
+         378,
+         "run"
+      ],
+      [
+         "ed/scripts/twistd.py",
+         25,
+         "runApp"
+      ],
+      [
+         "d/application/app.py",
+         643,
+         "run"
+      ],
+      [
+         "ed/scripts/twistd.py",
+         29,
+         "run"
+      ],
+      [
+         "t/sandbox/bin/twistd",
+         18,
+         "<module>"
+      ],
+      [
+         "/python/deprecate.py",
+         490,
+         "__getattribute__"
+      ],
+      [
+         "es/klein/resource.py",
+         274,
+         "render"
+      ],
+      [
+         "wisted/web/server.py",
+         234,
+         "render"
+      ],
+      [
+         "wisted/web/server.py",
+         183,
+         "process"
+      ],
+      [
+         "/twisted/web/http.py",
+         768,
+         "requestReceived"
+      ],
+      [
+         "/twisted/web/http.py",
+         1781,
+         "allContentReceived"
+      ],
+      [
+         "/twisted/web/http.py",
+         1692,
+         "lineReceived"
+      ],
+      [
+         "d/protocols/basic.py",
+         571,
+         "dataReceived"
+      ],
+      [
+         "/twisted/web/http.py",
+         2088,
+         "dataReceived"
+      ],
+      [
+         "sted/internet/tcp.py",
+         215,
+         "_dataReceived"
+      ],
+      [
+         "sted/internet/tcp.py",
+         209,
+         "doRead"
+      ],
+      [
+         "net/selectreactor.py",
+         149,
+         "_doReadOrWrite"
+      ],
+      [
+         "ed/python/context.py",
+         81,
+         "callWithContext"
+      ],
+      [
+         "ed/python/context.py",
+         118,
+         "callWithContext"
+      ],
+      [
+         "wisted/python/log.py",
+         84,
+         "callWithContext"
+      ],
+      [
+         "wisted/python/log.py",
+         101,
+         "callWithLogger"
+      ],
+      [
+         "net/selectreactor.py",
+         143,
+         "doSelect"
+      ]
+   ],
+   "samples" : [
+      {
+         "threads" : {
+            "140735263617024" : [
+               0,
+               1,
+               2,
+               3,
+               4,
+               5,
+               6,
+               7,
+               8,
+               9,
+               10
+            ]
+         },
+         "cpu" : [
+            24.4,
+            8.1,
+            20.9,
+            8.3
+         ],
+         "mem" : {
+            "percent" : 82.4,
+            "used" : 2815406080,
+            "free" : 18563072,
+            "wired" : 1332219904,
+            "available" : 756236288,
+            "total" : 4294967296,
+            "inactive" : 737673216,
+            "active" : 745512960
+         },
+         "time" : 1471718737.4984
+      },
+      {
+         "time" : 1471718745.52914,
+         "mem" : {
+            "free" : 22970368,
+            "used" : 2845818880,
+            "percent" : 82.3,
+            "active" : 772710400,
+            "inactive" : 739291136,
+            "available" : 762261504,
+            "wired" : 1333817344,
+            "total" : 4294967296
+         },
+         "threads" : {
+            "140735263617024" : [
+               0,
+               1,
+               2,
+               3,
+               4,
+               5,
+               6,
+               7,
+               8,
+               9,
+               10
+            ]
+         },
+         "cpu" : [
+            17.4,
+            3.7,
+            12.5,
+            4.1
+         ]
+      },
+      {
+         "cpu" : [
+            34.4,
+            12.1,
+            39.7,
+            10.9
+         ],
+         "threads" : {
+            "140735263617024" : [
+               11,
+               12,
+               13,
+               14,
+               15,
+               16,
+               17,
+               18,
+               19,
+               20,
+               21,
+               22,
+               23,
+               24,
+               25,
+               26,
+               27,
+               1,
+               2,
+               3,
+               4,
+               5,
+               6,
+               7,
+               8,
+               9,
+               10
+            ]
+         },
+         "mem" : {
+            "free" : 14356480,
+            "used" : 2802221056,
+            "percent" : 82.5,
+            "active" : 737460224,
+            "inactive" : 738127872,
+            "total" : 4294967296,
+            "wired" : 1326632960,
+            "available" : 752484352
+         },
+         "time" : 1471718749.65994
+      }
+   ]
+}

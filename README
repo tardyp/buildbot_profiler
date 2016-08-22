@@ -1,0 +1,20 @@
+
+This plugin implements a profiler for buildbot master.
+
+- It uses statistical profiling loosely based on plop https://github.com/bdarnell/plop
+- Suitable for prod as statistical profiling is very low overhead
+- Profiles all threads including main thread and db threads
+- Removes noise samples when the threads are actually in the main loop
+- In-browser UI based on nvd3 and d3-flame-graph
+- Show cpu and memory percent over time
+- flame graph can be restricted to a subset of the trace
+- Detailed caller/callee are displayed when clicking on a function
+
+
+Usage:
+
+    pip install buildbot_profiler
+
+then in master.cfg:
+
+c['www']['plugins']['profiler'] = True

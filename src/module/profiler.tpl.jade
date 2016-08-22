@@ -1,0 +1,41 @@
+.container(style="max-width:990px")
+    .panel.panel-default
+        .panel-heading
+            h3.panel-title
+                | Buildbot Profiler
+                .btn.btn-xs.btn-default.pull-right(ng-click="show_settings = !show_settings")
+                    i.fa.fa-sliders
+                .btn.btn-xs.btn-default.pull-right(ng-click="start_stop()")
+                    i.fa.fa-circle(ng-class="{'recording': started}")
+                a.btn.btn-xs.btn-default.pull-right(href="profiler/api/profiles", download="profile.json", ng-show="profile_available")
+                    i.fa.fa-download(title="download to file")
+                input.btn.btn-xs.btn-default.pull-right(type="file",       onchange="angular.element(this).scope().load(this)")
+                span(ng-show="started") : {{num_samples}} samples recorded {{remaining | number : 1}}s remaining
+                span(ng-show="data") : {{data.samples.length}} samples recorded, {{data.frames.length}} frames 
+        .panel-body(ng-show="show_settings")
+            form
+                .form-group
+                    label Sampling Frequency (HZ)
+                    input.form-control(type="number", ng-model="frequency")
+                .form-group
+                    label Gathering Period (s)
+                    input.form-control(type="number", ng-model="gatherperiod")
+    #cpuviewer
+        svg(style="height:200px")
+    #profile
+    p Click on profile for additional info
+    table.table.table-stripped.table-condensed(ng-if="frameStats")
+        tr
+            th {{frameStats.name}}
+            th {{frameStats.totsamples}} samples
+        tr
+            th callers
+        tr(ng-repeat="caller in frameStats.callers")
+            td {{caller.name}}
+            td {{caller.percent | number : 1}} %
+        tr
+            th callees
+        tr(ng-repeat="callee in frameStats.callees")
+            td {{callee.name}}
+            td {{callee.percent | number : 1}} %
+            

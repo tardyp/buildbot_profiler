@@ -1,0 +1,7 @@
+dist/
+*.pyc
+buildbot_profiler/VERSION
+build/
+buildbot_profiler/static
+libs/
+node_modules/
