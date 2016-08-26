@@ -9,14 +9,15 @@ except ImportError:
 setup_www_plugin(
     name='buildbot-profiler',
     description='"Profiler for buildbot master and its UI"',
+    long_description=open('README.rst').read(),
     author=u'Buildbot contributors',
     author_email=u'devel@buildbot.net',
     url='https://github.com/tardyp/buildbot_profiler',
     license='GNU GPL',
-    version='0.0.1',
+    version='0.0.2',
     packages=['buildbot_profiler'],
     install_requires=[
-        'klein'
+        'klein', 'psutil'
     ],
     package_data={
         '': [
