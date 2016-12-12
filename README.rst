@@ -26,6 +26,17 @@ then in master.cfg:
 
     c['www']['plugins']['profiler'] = True
 
+Standalone Viewer
+=================
+
+A standalone viewer is provided for offline browse of user submitted profiles.
+
+.. code:: bash
+
+    bbprofiler
+
+Then you can open your browser on http://localhost:8080
+
 Screenshot
 ==========
 
