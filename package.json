@@ -6,6 +6,18 @@
     },
     "dependencies": {
         "gulp": "3.9.0",
-        "guanlecoja": "~0.6.0"
+        "guanlecoja": "~0.8.0"
+    },
+    "coffeelintConfig": {
+        "indentation": {
+            "level": "error",
+            "value": 4
+        },
+        "max_line_length": {
+            "value": 110,
+            "level": "error",
+            "limitComments": true
+        }
+
     }
 }

@@ -1,10 +1,19 @@
 # Register new module
-angular.module('profiler', ['analysis'])
+angular.module('profiler', ['analysis', 'ui.router'])
 
 # Register new state
-class State extends Config
-    constructor: ($stateProvider, glMenuServiceProvider) ->
+if window.standalone
+    angular.module('profiler').config ($urlRouterProvider, $stateProvider) ->
+        # Register new state
+        $stateProvider.state
+            controller: "profilerPageController"
+            templateUrl: "profiler/views/profiler.html"
+            name: "profiler"
+            url: "/"
+        $urlRouterProvider.otherwise('/')
 
+else
+    angular.module('profiler').config ($stateProvider, glMenuServiceProvider) ->
         groupName = 'debug'
 
         # debug
@@ -31,6 +40,7 @@ class ProfilerPage extends Controller
         self = this
         self.$scope = $scope
         graphLoaded = false
+        $scope.standalone = window.standalone
         $scope.start_stop = ->
             $scope.started = !$scope.started
             if $scope.started

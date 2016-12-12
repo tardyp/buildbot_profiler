@@ -14,7 +14,7 @@ setup_www_plugin(
     author_email=u'devel@buildbot.net',
     url='https://github.com/tardyp/buildbot_profiler',
     license='GNU GPL',
-    version='0.0.2',
+    version='1.0.0',
     packages=['buildbot_profiler'],
     install_requires=[
         'klein', 'psutil'
@@ -28,5 +28,7 @@ setup_www_plugin(
     entry_points="""
         [buildbot.www]
         profiler= buildbot_profiler:ep
+        [console_scripts]
+        bbprofiler=buildbot_profiler.app:main
     """,
 )

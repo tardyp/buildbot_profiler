@@ -1,0 +1,15 @@
+doctype html
+html
+    meta(http-equiv="content-type" content="text/html; charset=UTF8")
+    head
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.9/angular.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js")
+        link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css")
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+        link(rel="stylesheet" href="styles.css")
+        script
+            | window.standalone=true;
+        script(src="scripts.js")
+    body(ng-app="profiler")
+        ui-view

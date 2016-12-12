@@ -3,11 +3,11 @@
         .panel-heading
             h3.panel-title
                 | Buildbot Profiler
-                .btn.btn-xs.btn-default.pull-right(ng-click="show_settings = !show_settings")
+                .btn.btn-xs.btn-default.pull-right(ng-hide="standalone",ng-click="show_settings = !show_settings")
                     i.fa.fa-sliders
-                .btn.btn-xs.btn-default.pull-right(ng-click="start_stop()")
+                .btn.btn-xs.btn-default.pull-right(ng-hide="standalone", ng-click="start_stop()")
                     i.fa.fa-circle(ng-class="{'recording': started}")
-                a.btn.btn-xs.btn-default.pull-right(href="profiler/api/profiles", download="profile.json", ng-show="profile_available")
+                a.btn.btn-xs.btn-default.pull-right(ng-hide="standalone", href="profiler/api/profiles", download="profile.json", ng-show="profile_available")
                     i.fa.fa-download(title="download to file")
                 input.btn.btn-xs.btn-default.pull-right(type="file",       onchange="angular.element(this).scope().load(this)")
                 span(ng-show="started") : {{num_samples}} samples recorded {{remaining | number : 1}}s remaining
@@ -23,7 +23,7 @@
     #cpuviewer
         svg(style="height:200px")
     #profile
-    p Click on profile for additional info
+    p(ng-if="data") Click on profile for additional info
     table.table.table-stripped.table-condensed(ng-if="frameStats")
         tr
             th {{frameStats.name}}

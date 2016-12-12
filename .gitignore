@@ -1,3 +1,5 @@
+*.egg-info
+yarn.lock
 dist/
 *.pyc
 buildbot_profiler/VERSION
