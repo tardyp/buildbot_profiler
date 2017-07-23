@@ -28,6 +28,8 @@ setup_www_plugin(
     entry_points="""
         [buildbot.www]
         profiler= buildbot_profiler:ep
+        [buildbot.util]
+        ProfilerService= buildbot_profiler.api:ProfilerService
         [console_scripts]
         bbprofiler=buildbot_profiler.app:main
     """,

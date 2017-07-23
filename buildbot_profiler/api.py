@@ -1,20 +1,21 @@
 from __future__ import with_statement
 
+import datetime
 import json
+import os
 import signal
 import sys
 import thread
 import time
-from signal import ITIMER_PROF
-from signal import ITIMER_REAL
-from signal import ITIMER_VIRTUAL
-from signal import setitimer
-
-from future.utils import iteritems
-from klein import Klein
-from twisted.internet import defer
+from signal import ITIMER_PROF, ITIMER_REAL, ITIMER_VIRTUAL, setitimer
 
 import psutil
+from buildbot import config
+from buildbot.util import toJson
+from buildbot.util.service import BuildbotService
+from future.utils import iteritems
+from klein import Klein
+from twisted.internet import defer, reactor
 
 # waiting functions we should not take in the profile, as those are evidence that the thread is idle
 BLACKLIST = [
@@ -38,6 +39,7 @@ class Collector(object):
         timer, sig = Collector.MODES[self.mode]
         signal.signal(sig, self.handler)
         signal.siginterrupt(sig, False)
+        self.finish_callback = lambda: None
         self.reset()
 
     def reset(self):
@@ -86,6 +88,7 @@ class Collector(object):
         if self.stoptime < start or self.stopping:
             setitimer(Collector.MODES[self.mode][0], 0, 0)
             self.stopped = True
+            reactor.callFromThread(self.finish_callback)
             return
 
         current_tid = thread.get_ident()
@@ -113,22 +116,66 @@ class Collector(object):
             time=start,
             threads=threads,
             cpu=psutil.cpu_percent(percpu=True),
-            mem=dict(psutil.virtual_memory().__dict__)))
+            mem=psutil.virtual_memory()._asdict()))
 
         end = time.time()
         self.samples_taken += 1
         self.sample_time += (end - start)
 
     def asJson(self):
+        return json.dumps(self.asDict())
+
+    def asDict(self):
         self.paused = True
-        r = json.dumps(dict(
+        r = dict(
             gatherperiod=self.gatherperiod,
             frequency=self.frequency,
             frames=self.frames,
             samples=self.samples
-        ))
+        )
         self.paused = False
         return r
+
+
+class ProfilerService(BuildbotService):
+    name = "ProfilerService"
+
+    def checkConfig(self, frequency=100, gatherperiod=30 * 60, mode='virtual',
+                    basepath=None, wantBuilds=100):
+        BuildbotService.checkConfig(self)
+        if mode not in Collector.MODES:
+            config.error("mode should be in {} while it is {}".format(Collector.MODES, mode))
+        self.collector = None
+
+    def reconfigService(self, frequency=100, gatherperiod=30 * 60, mode='virtual',
+                        basepath=None, wantBuilds=100):
+        BuildbotService.reconfigService(self)
+        if self.collector is not None:
+            self.collector.stop()
+        if basepath is None:
+            basepath = os.path.join(self.master.basedir, "prof_")
+        self.basepath = basepath
+        self.wantBuilds = wantBuilds
+        self.collector = Collector(frequency=frequency, gatherperiod=gatherperiod, mode=mode)
+        self.collector.finish_callback = self.finished
+        self.collector.start()
+
+    def stopService(self):
+        BuildbotService.stopService(self)
+        if self.collector is not None:
+            self.collector.stop()
+
+    @defer.inlineCallbacks
+    def finished(self):
+        if self.collector is not None:
+            data = self.collector.asDict()
+            if self.wantBuilds:
+                data['builds'] = yield self.master.data.get(
+                    ("builds",), order=["-buildid"], limit=self.wantBuilds)
+                data['builds'] = data['builds'].data
+            with open(self.basepath + datetime.datetime.now().isoformat() + ".json", "w") as o:
+                o.write(json.dumps(data, default=toJson))
+            self.collector.start()
 
 
 class Api(object):
