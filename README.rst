@@ -34,15 +34,17 @@ Alternatively, you can install it in service mode, without the UI
 
 ProfilerService takes following arguments:
 
-```
-ProfilerService(frequency=100, gatherperiod=30 * 60, mode='virtual', basepath=None, wantBuilds=100):
-```
+.. code:: python
+
+    ProfilerService(frequency=100, gatherperiod=30 * 60, mode='virtual', basepath=None, wantBuilds=100)
+
 
 - ``frequency``: the profiling frequency in HZ. Not that if there is no activity during a profiling timer, no data will be recorded.
 
 - ``gatherperiod``: the period during which the profiler works on one file. By default a new json file is created every 30min with the profile of the last 30min. Note that if there is no activity the gather period might be longer.
 
 -  ``mode``: profiling timer to use. Can be:
+
     - ``prof``: use ``SIG_PROF`` timer,
     - ``virtual``: use ``SIGVTALRM`` timer,
     - ``real``: use ``SIGALRM`` timer,
