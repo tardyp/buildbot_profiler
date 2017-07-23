@@ -158,24 +158,27 @@ class ProfilerService(BuildbotService):
         self.wantBuilds = wantBuilds
         self.collector = Collector(frequency=frequency, gatherperiod=gatherperiod, mode=mode)
         self.collector.finish_callback = self.finished
+        print("starting profiler")
         self.collector.start()
 
     def stopService(self):
         BuildbotService.stopService(self)
         if self.collector is not None:
-            self.collector.stop()
+            print("stopping profiler")
+            collector, self.collector = self.collector, None
+            collector.stop()
 
     @defer.inlineCallbacks
     def finished(self):
         if self.collector is not None:
             data = self.collector.asDict()
+            self.collector.start()
             if self.wantBuilds:
                 data['builds'] = yield self.master.data.get(
                     ("builds",), order=["-buildid"], limit=self.wantBuilds)
                 data['builds'] = data['builds'].data
             with open(self.basepath + datetime.datetime.now().isoformat() + ".json", "w") as o:
                 o.write(json.dumps(data, default=toJson))
-            self.collector.start()
 
 
 class Api(object):
