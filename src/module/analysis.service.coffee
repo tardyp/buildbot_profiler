@@ -98,7 +98,7 @@ class Analysis extends Service("analysis")
             else
                 skips = 0
             toskip = skips
-            cursamplepersecond =
+            cursamplepersecond = {x:0, y:0}
             for sample in samples
                 totcpu = 0
                 for cpu, i in sample.cpu
@@ -111,7 +111,6 @@ class Analysis extends Service("analysis")
                         maxload = samplepersecond
                     samplepersecond = 0
                     lastsecond = second
-                #totcpu /= sample.cpu.length
                 toskip -= 1
                 if toskip <= 0
                     toskip = skips

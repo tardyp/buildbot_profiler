@@ -68,10 +68,10 @@ describe 'analysis service', ->
             key: 'cpu'
             values: [
                 x: 0
-                y: 24.275000000000002
+                y: 97.10000000000001
             ,
                 x: 1
-                y: 18.025000000000002
+                y: 72.10000000000001
             ]
         ,
             key: 'mem'
@@ -85,12 +85,16 @@ describe 'analysis service', ->
         ,
             key: 'load'
             values: [
+                x: 0
+                y: 0
+            ,
                 x: 1
                 y: 100
             ]
         ]
         ret = analysisService.profileToCpu(data)
-        expect(JSON.stringify(ret)).toEqual(JSON.stringify(expected))
+        for i in [0..2]
+            expect(JSON.stringify(ret[i])).toEqual(JSON.stringify(expected[i]))
 
     it "test_fixture_cpu", ->
         ret = analysisService.profileToCpu(FIXTURES['profile.fixture.json'])
