@@ -9,6 +9,11 @@ class Analysis extends Service("analysis")
         simplifyFlame = (flame, threshold) ->
             flame.children = flame.children.filter (v) -> v.value >= threshold
             flame.children.forEach (v) -> simplifyFlame(v, threshold)
+            # fold flames that have one child
+            while flame.children.length == 1
+                child = flame.children[0]
+                flame.children = child.children
+                flame.name = flame.name + '←' + child.name
         return {
         profileToFlame: ({frames, samples}, extent) ->
             ret = _.cloneDeep
@@ -36,8 +41,8 @@ class Analysis extends Service("analysis")
                         cur[frameid].value += 1
                         cur = cur[frameid].children
             children_to_array(ret)
-            if ret.value/1000 > 1
-                simplifyFlame(ret, ret.value/1000)
+            if ret.value/4000 > 1
+                simplifyFlame(ret, ret.value/4000)
             return ret
 
         getFrameStats: ({frames, samples}, frameid, extent) ->
@@ -87,6 +92,13 @@ class Analysis extends Service("analysis")
             lastsecond = start
             samplepersecond = 0
             maxload = 0
+            if samples.length > 1000
+                skips = samples.length/1000
+                console.log skips
+            else
+                skips = 0
+            toskip = skips
+            cursamplepersecond =
             for sample in samples
                 totcpu = 0
                 for cpu, i in sample.cpu
@@ -94,14 +106,18 @@ class Analysis extends Service("analysis")
                 samplepersecond += 1
                 second = Math.floor(sample.time)
                 if second > lastsecond
-                    ret.load.values.push x:second - Math.floor(start), y: samplepersecond
+                    cursamplepersecond = x:second - Math.floor(start), y: samplepersecond
                     if samplepersecond > maxload
                         maxload = samplepersecond
                     samplepersecond = 0
                     lastsecond = second
-                totcpu /= sample.cpu.length
-                ret.cpu.values.push x:sample.time - start, y:totcpu
-                ret.mem.values.push x:sample.time - start, y:sample.mem.percent
+                #totcpu /= sample.cpu.length
+                toskip -= 1
+                if toskip <= 0
+                    toskip = skips
+                    ret.load.values.push cursamplepersecond
+                    ret.cpu.values.push x:sample.time - start, y:totcpu
+                    ret.mem.values.push x:sample.time - start, y:sample.mem.percent
             for s in ret.load.values
                 s.y = s.y * 100 / maxload
             return _.values(ret)
