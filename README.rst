@@ -68,3 +68,11 @@ Screenshot
 ==========
 
 .. image:: https://raw.githubusercontent.com/tardyp/buildbot_profiler/master/screenshot.png
+
+
+ChangeLog
+=========
+* 1.2.0 Fold the flames so that you can explore larger traces.
+        Fix the service so that the trace is reset between run.
+* 1.1.0 add a service to use the profiler without bother the users with a profiler UI.
+* 1.0.0 initial version
