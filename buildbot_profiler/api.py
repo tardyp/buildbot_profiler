@@ -152,6 +152,7 @@ class ProfilerService(BuildbotService):
         BuildbotService.reconfigService(self)
         if self.collector is not None:
             self.collector.stop()
+            self.collector.reset()
         if basepath is None:
             basepath = os.path.join(self.master.basedir, "prof_")
         self.basepath = basepath
@@ -172,6 +173,7 @@ class ProfilerService(BuildbotService):
     def finished(self):
         if self.collector is not None:
             data = self.collector.asDict()
+            self.collector.reset()
             self.collector.start()
             if self.wantBuilds:
                 data['builds'] = yield self.master.data.get(
