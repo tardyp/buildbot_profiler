@@ -5,7 +5,11 @@ class Analysis extends Service("analysis")
             v.children = _.values(v.children)
             v.children.forEach(children_to_array)
         makeName = (info) ->
-            return "#{info[0]}+#{info[1]}:#{info[2]}"
+            try
+                return "#{info[0]}+#{info[1]}:#{info[2]}"
+            catch error
+                console.log "undefined frame", info
+                return "<undefined>"
         simplifyFlame = (flame, threshold) ->
             flame.children = flame.children.filter (v) -> v.value >= threshold
             flame.children.forEach (v) -> simplifyFlame(v, threshold)
@@ -41,8 +45,7 @@ class Analysis extends Service("analysis")
                         cur[frameid].value += 1
                         cur = cur[frameid].children
             children_to_array(ret)
-            if ret.value/4000 > 1
-                simplifyFlame(ret, ret.value/4000)
+            simplifyFlame(ret, ret.value/7000)
             return ret
 
         getFrameStats: ({frames, samples}, frameid, extent) ->
@@ -94,7 +97,6 @@ class Analysis extends Service("analysis")
             maxload = 0
             if samples.length > 1000
                 skips = samples.length/1000
-                console.log skips
             else
                 skips = 0
             toskip = skips
@@ -106,7 +108,9 @@ class Analysis extends Service("analysis")
                 samplepersecond += 1
                 second = Math.floor(sample.time)
                 if second > lastsecond
-                    cursamplepersecond = x:second - Math.floor(start), y: samplepersecond
+                    cursamplepersecond = x:Math.floor(sample.time - start), y: samplepersecond
+                    if skips == 0
+                        ret.load.values.push cursamplepersecond
                     if samplepersecond > maxload
                         maxload = samplepersecond
                     samplepersecond = 0
@@ -114,7 +118,8 @@ class Analysis extends Service("analysis")
                 toskip -= 1
                 if toskip <= 0
                     toskip = skips
-                    ret.load.values.push cursamplepersecond
+                    if skips != 0 and ret.load.values[ret.load.values.length-1] != cursamplepersecond
+                        ret.load.values.push cursamplepersecond
                     ret.cpu.values.push x:sample.time - start, y:totcpu
                     ret.mem.values.push x:sample.time - start, y:sample.mem.percent
             for s in ret.load.values
