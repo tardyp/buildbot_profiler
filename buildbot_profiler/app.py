@@ -1,12 +1,14 @@
 import os
 import sys
 
+from __future__ import print_function
+
 from twisted.internet import reactor
 from twisted.python import log
 from twisted.web.server import Site
 
 from buildbot_profiler import ep
-from buildbot.util import unicode2bytes
+
 
 def main():
     port = os.environ.get("PORT", 8080)

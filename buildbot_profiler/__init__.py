@@ -7,4 +7,4 @@ from .api import Api
 # create the interface for the setuptools entry point
 ep = Application(__name__, "Buildbot profiler")
 api = Api(ep)
-ep.resource.putChild(unicode2bytes("api"), api.app.resource())
+ep.resource.putChild(b"api", api.app.resource())
