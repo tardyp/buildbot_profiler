@@ -5,7 +5,7 @@ import json
 import os
 import signal
 import sys
-import thread
+import threading
 import time
 from signal import ITIMER_PROF, ITIMER_REAL, ITIMER_VIRTUAL, setitimer
 
@@ -91,7 +91,7 @@ class Collector(object):
             reactor.callFromThread(self.finish_callback)
             return
 
-        current_tid = thread.get_ident()
+        current_tid = threading.get_ident()
         threads = {}
 
         for tid, frame in iteritems(sys._current_frames()):
