@@ -72,6 +72,7 @@ Screenshot
 
 ChangeLog
 =========
+* 1.2.2 Fixes for python3
 * 1.2.1 Fix issues with load calculation
 * 1.2.0 Fold the flames so that you can explore larger traces.
         Fix the service so that the trace is reset between run.
