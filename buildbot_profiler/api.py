@@ -6,6 +6,7 @@ import os
 import signal
 import sys
 import threading
+import thread
 import time
 from signal import ITIMER_PROF, ITIMER_REAL, ITIMER_VIRTUAL, setitimer
 
@@ -22,6 +23,10 @@ BLACKLIST = [
     ("threading.py", "wait"),
     ("epollreactor.py", "doPoll"),
 ]
+try:
+    get_ident = threading.get_ident
+except AttributeError:
+    get_ident = thread.get_ident
 
 
 class Collector(object):
@@ -91,7 +96,7 @@ class Collector(object):
             reactor.callFromThread(self.finish_callback)
             return
 
-        current_tid = threading.get_ident()
+        current_tid = get_ident()
         threads = {}
 
         for tid, frame in iteritems(sys._current_frames()):
