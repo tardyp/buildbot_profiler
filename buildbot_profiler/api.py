@@ -6,7 +6,6 @@ import os
 import signal
 import sys
 import threading
-import thread
 import time
 from signal import ITIMER_PROF, ITIMER_REAL, ITIMER_VIRTUAL, setitimer
 
@@ -26,6 +25,7 @@ BLACKLIST = [
 try:
     get_ident = threading.get_ident
 except AttributeError:
+    import thread
     get_ident = thread.get_ident
 
 
@@ -204,8 +204,8 @@ class Api(object):
         if self.collector is not None:
             request.setResponseCode(409)
             return defer.succeed("already started")
-        self.gatherperiod = int(request.args.get('gatherperiod', [self.gatherperiod])[0])
-        self.frequency = int(request.args.get('frequency', [self.frequency])[0])
+        self.gatherperiod = int(request.args.get(b'gatherperiod', [self.gatherperiod])[0])
+        self.frequency = int(request.args.get(b'frequency', [self.frequency])[0])
         self.collector = Collector(self.frequency, self.gatherperiod, self.mode)
         self.collector.start()
         return defer.succeed("OK")

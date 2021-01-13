@@ -1,5 +1,6 @@
 angular.module('analysis', [])
-class Analysis extends Service("analysis")
+
+class Analysis
     constructor: () ->
         children_to_array = (v) ->
             v.children = _.values(v.children)
@@ -126,3 +127,5 @@ class Analysis extends Service("analysis")
                 s.y = s.y * 100 / maxload
             return _.values(ret)
         }
+
+angular.module('analysis').service("analysisService", Analysis)

@@ -1,19 +1,25 @@
 # Register new module
-angular.module('profiler', ['analysis', 'ui.router'])
+angular.module('profiler', ['analysis', 'ui.router', "guanlecoja.ui"])
+
+require("../lib/d3.js")
+require("../lib/d3.flameGraph.js")
+require("../lib/d3.tip.js")
+
+require("../lib/nv.d3.js")
 
 # Register new state
 if window.standalone
-    angular.module('profiler').config ($urlRouterProvider, $stateProvider) ->
+    angular.module('profiler').config ["$urlRouterProvider", "$stateProvider", ($urlRouterProvider, $stateProvider) ->
         # Register new state
         $stateProvider.state
             controller: "profilerPageController"
-            templateUrl: "profiler/views/profiler.html"
+            template: require('./profiler.tpl.jade'),
             name: "profiler"
             url: "/"
         $urlRouterProvider.otherwise('/')
-
+    ]
 else
-    angular.module('profiler').config ($stateProvider, glMenuServiceProvider) ->
+    angular.module('profiler').config ["$stateProvider", "glMenuServiceProvider", ($stateProvider, glMenuServiceProvider) ->
         groupName = 'debug'
 
         # debug
@@ -26,15 +32,15 @@ else
         # Register new state
         $stateProvider.state
             controller: "profilerPageController"
-            templateUrl: "profiler/views/profiler.html"
+            template: require('./profiler.tpl.jade'),
             name: "profiler"
             url: "/profiler/profiler"
             data:
                 group: groupName
                 caption: 'Profiler'
                 icon: 'area-chart'
-
-class ProfilerPage extends Controller
+    ]
+class ProfilerPage
     self = null
     constructor: ($scope, $state, $http, $interval, analysisService) ->
         self = this
@@ -55,7 +61,7 @@ class ProfilerPage extends Controller
             if f.files.length == 1
                 r = new FileReader()
                 r.onload =  (progress) ->
-                    if progress.loaded = progress.total
+                    if progress.loaded == progress.total
                         data = JSON.parse(r.result)
                         $scope.loadGraph(data)
                 r.readAsBinaryString(f.files[0])
@@ -78,6 +84,7 @@ class ProfilerPage extends Controller
         timer = $interval($scope.updateStatus, 5000)
         $scope.$on('$destroy', -> $interval.cancel(timer))
         flamegraph = d3.flameGraph().width(960).height(540)
+        console.log(flamegraph.onClick)
         flamegraph.onClick (d)-> $scope.$apply ->
             $scope.frameStats = analysisService.getFrameStats($scope.data, d.id)
 
@@ -88,11 +95,8 @@ class ProfilerPage extends Controller
         , 100
 
         $scope.loadGraphFromAPI = ->
-            d3.json 'profiler/api/profiles', (error, data) ->
-                if error
-                    return console.warn(error)
-
-                $scope.loadGraph(data)
+            $http.get("profiler/api/profiles").then (res) ->
+                $scope.loadGraph(res.data)
 
         $scope.loadGraph = (data)->
             $scope.data = data
@@ -112,3 +116,5 @@ class ProfilerPage extends Controller
                 return chart
 
             return
+
+angular.module('profiler').controller('profilerPageController', ["$scope", "$state", "$http", "$interval", "analysisService", ProfilerPage]);
