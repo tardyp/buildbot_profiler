@@ -72,6 +72,7 @@ Screenshot
 
 ChangeLog
 =========
+* 1.3.1 Upgrade build to webpack, Fix argument parsing for record duration and sample rate
 * 1.2.3 Fixes for python2
 * 1.2.2 Fixes for python3
 * 1.2.1 Fix issues with load calculation
